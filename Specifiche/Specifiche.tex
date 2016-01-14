@@ -1,0 +1,35 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{Specifiche progetto di programmazione di sistemi mobili}
+\begin{document}
+\maketitle
+Si vuole realizzare un'applicazione Android che fornisce informazioni turistiche su località di interesse dell'utente. L'utente potrà cercare le località da un apposito menù di ricerca oppure direttamente sulla mappa selezionandola. Per ogni punto di interesse della località l'utente potrà lasciare dei commenti o dei giudizi.
+
+\section*{Funzionalità}
+\subsubsection*{Menù principale}
+Il menù principale darà all'utente la possibilità di scegliere se effettuare la ricerca direttamente sulla mappa oppure dall'apposito menù. Inoltre il menù darà accedere anche alla sezione in cui l'utente salva le località preferite.
+\subsubsection*{Mappa}
+La mappa mostrerà le località nelle vicinanze dell'utente e i loro punti di interesse. Toccando le relative icone si avrà accesso alle informazioni relative.
+\subsubsection*{Menu di ricerca}
+Il menù mostrerà un form in cui inserire il nome del luogo da ricercare e la lista di tutte le località omonime. L'utente selezionerà quella desiderata e verrà portato sulla mappa in quella posizione.
+\subsubsection*{Preferiti}
+In questa sezione verranno salvate le località preferite dell'utente.
+\subsubsection*{Informazioni e commenti} 
+Dopo aver selezionato il luogo verranno mostrate le informazioni relative ad esso o i commenti degli utenti.L'utente da questa sezione può inserire il proprio commento.
+
+\section*{Componenti Android previsti}
+\begin{itemize}
+\item Google Map per la mappa
+\item Google Places per ottenere le informazioni relative alle località
+\item Storage locale per dati salvati in locale
+\item Geolocalizzazione per ottenere la posizione dell'utente
+\item Stringhe JSON per ottenere i dati dal server
+
+\end{itemize}
+\end{document}
