@@ -1,6 +1,7 @@
 package ft.findandtravel;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.service.voice.VoiceInteractionSession;
@@ -21,15 +22,26 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.internal.PlaceImpl;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
@@ -52,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
                     .build();
 
             Log.i("client","inizializzato");
@@ -145,6 +158,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onResponse(String response) {
                             // Display the first 500 characters of the response string.
                             Log.i("Response is: ", response);
+                            try {
+                                JSONObject aux = new JSONObject(response);
+                                JSONArray arr = aux.getJSONArray("results");
+                                Log.i("JSONArray",arr.toString());
+
+                                for(int i = 0;i<arr.length();++i){
+
+                                    JSONObject o = arr.getJSONObject(i);
+                                    JSONObject a = (JSONObject)o.get("geometry");
+                                    a = (JSONObject)a.get("location");
+                                    final double lat = (double)a.get("lat");
+                                    final double lng = (double)a.get("lng");
+                                    String id = (String)o.get("place_id");
+
+                                    Places.GeoDataApi.getPlaceById(client, id).setResultCallback(new ResultCallback<PlaceBuffer>() {
+                                        @Override
+                                        public void onResult(PlaceBuffer places) {
+                                            if (places.getStatus().isSuccess() && places.getCount() > 0) {
+                                                final Place myPlace = places.get(0);
+
+                                                mMap.addMarker(new MarkerOptions()
+                                                        .position(new LatLng(lat, lng))
+                                                        .title((String) myPlace.getName())
+                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                                            } else {
+                                                Log.i("Map", "place not found");
+                                            }
+
+                                            places.release();
+                                        }
+                                    });
+
+                                    Log.i(id, lat + "," + lng);
+
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -157,8 +209,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
             LatLng position = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione"));
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position,12.0f)));
+            mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
+
+
         }
     }
 }
