@@ -2,6 +2,7 @@ package ft.findandtravel;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.service.voice.VoiceInteractionSession;
@@ -37,11 +38,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.Serializable;
+
+import ft.findandtravel.servizi.PlaceRequest;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
@@ -50,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private GoogleApiClient client;
     private Location lastLocation;
+    private Place scelta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +114,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 updatePosition();
             }
         });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                Intent intent = new Intent(MapsActivity.this,PlaceDetail.class);
+
+                intent.putExtra("place",marker.getPosition());
+                startActivity(intent);
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -144,75 +164,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void updatePosition(){
-        if(lastLocation != null){
+        PlaceRequest.getMuseum(lastLocation, client, mMap, this);
+        //PlaceRequest.getMonument(lastLocation, client, mMap, this);
+        PlaceRequest.getPlaceOfWorship(lastLocation,client,mMap,this);
 
-            RequestQueue queue = Volley.newRequestQueue(this);
-
-            String url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?location="
-                    +lastLocation.getLatitude()+","+lastLocation.getLongitude()
-                    +"&radius=5000&types=museum&key=AIzaSyAtcUr-ci8vqcyogU-tebHMcyZmAZ00_i0";
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            // Display the first 500 characters of the response string.
-                            Log.i("Response is: ", response);
-                            try {
-                                JSONObject aux = new JSONObject(response);
-                                JSONArray arr = aux.getJSONArray("results");
-                                Log.i("JSONArray",arr.toString());
-
-                                for(int i = 0;i<arr.length();++i){
-
-                                    JSONObject o = arr.getJSONObject(i);
-                                    JSONObject a = (JSONObject)o.get("geometry");
-                                    a = (JSONObject)a.get("location");
-                                    final double lat = (double)a.get("lat");
-                                    final double lng = (double)a.get("lng");
-                                    String id = (String)o.get("place_id");
-
-                                    Places.GeoDataApi.getPlaceById(client, id).setResultCallback(new ResultCallback<PlaceBuffer>() {
-                                        @Override
-                                        public void onResult(PlaceBuffer places) {
-                                            if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                                                final Place myPlace = places.get(0);
-
-                                                mMap.addMarker(new MarkerOptions()
-                                                        .position(new LatLng(lat, lng))
-                                                        .title((String) myPlace.getName())
-                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
-                                            } else {
-                                                Log.i("Map", "place not found");
-                                            }
-
-                                            places.release();
-                                        }
-                                    });
-
-                                    Log.i(id, lat + "," + lng);
-
-                                }
-                            }catch (JSONException e){
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //mTextView.setText("That didn't work!");
-                }
-            });
-
-            queue.add(stringRequest);
-
-
-            LatLng position = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
-
-
-        }
     }
 }
