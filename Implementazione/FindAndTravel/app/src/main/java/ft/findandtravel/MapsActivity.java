@@ -122,6 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent intent = new Intent(MapsActivity.this,PlaceDetail.class);
 
                 intent.putExtra("place",marker.getPosition());
+                
                 startActivity(intent);
                 return false;
             }
@@ -164,6 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void updatePosition(){
+        mMap.clear();
         PlaceRequest.getMuseum(lastLocation, client, mMap, this);
         //PlaceRequest.getMonument(lastLocation, client, mMap, this);
         PlaceRequest.getPlaceOfWorship(lastLocation,client,mMap,this);

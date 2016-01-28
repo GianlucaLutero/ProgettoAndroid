@@ -1,6 +1,7 @@
 package ft.findandtravel.servizi;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.util.Log;
 
@@ -29,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import ft.findandtravel.R;
 
 /**
  * Created by gianluca on 25/01/16.
@@ -74,7 +77,7 @@ public class PlaceRequest{
                                                 mMap.addMarker(new MarkerOptions()
                                                         .position(new LatLng(lat, lng))
                                                         .title((String) myPlace.getName())
-                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_musei)));
 
                                             } else {
                                                 Log.i("Map", "place not found");
@@ -102,7 +105,7 @@ public class PlaceRequest{
 
 
             LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
+           // mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
 
 
@@ -184,9 +187,8 @@ public class PlaceRequest{
 
 
             LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
+        //    mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
-
 
         }
     }
@@ -228,7 +230,7 @@ public class PlaceRequest{
                                                 mMap.addMarker(new MarkerOptions()
                                                         .position(new LatLng(lat, lng))
                                                         .title((String) myPlace.getName())
-                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_luoghi_culto)));
 
                                             } else {
                                                 Log.i("Map", "place not found");
@@ -255,8 +257,8 @@ public class PlaceRequest{
             queue.add(stringRequest);
 
 
-            LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
+           LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
+           // mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
 
 
