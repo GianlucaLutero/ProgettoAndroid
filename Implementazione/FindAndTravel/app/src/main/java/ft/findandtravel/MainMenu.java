@@ -14,8 +14,10 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         ImageButton buttonMap = (ImageButton) findViewById(R.id.mapButton);
+        ImageButton buttonPreference = (ImageButton) findViewById(R.id.preferenceButton);
 
         buttonMap.setOnClickListener(startMap());
+        buttonPreference.setOnClickListener(startPreference());
     }
 
     private View.OnClickListener startMap() {
@@ -27,6 +29,17 @@ public class MainMenu extends AppCompatActivity {
 
                 startActivity(intent);
 
+            }
+        };
+    }
+
+    private View.OnClickListener startPreference(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this,PreferencesActivity.class);
+
+                startActivity(intent);
             }
         };
     }

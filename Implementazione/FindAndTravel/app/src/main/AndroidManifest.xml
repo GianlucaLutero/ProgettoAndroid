@@ -54,8 +54,24 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
-        <activity android:name=".PlaceDetail"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".PlaceDetail"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MapsActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MapsActivity"/>
+
+        </activity>
+
+
+
+
+        <activity
+            android:name=".PreferencesActivity"
+            android:label="@string/title_activity_preferences"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

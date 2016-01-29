@@ -1,8 +1,13 @@
 package ft.findandtravel;
 
 import android.app.DownloadManager;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -46,12 +51,15 @@ import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.json.JSONTokener;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ft.findandtravel.modello.DataBaseModel;
 import ft.findandtravel.modello.Reviewer;
 import ft.findandtravel.modello.ReviewerAdapter;
+import ft.findandtravel.servizi.DataBaseHelper;
 
 
 public class PlaceDetail extends AppCompatActivity implements
@@ -59,11 +67,12 @@ public class PlaceDetail extends AppCompatActivity implements
 
     private GoogleApiClient client;
     private LatLng position;
-    private Place luogo;
+    private String name;
     private RequestQueue queue;
     private TextView textView;
     private ListView review;
     private ImageView placeImage;
+    private FloatingActionButton savePlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +85,7 @@ public class PlaceDetail extends AppCompatActivity implements
         textView =  (TextView) findViewById(R.id.dettagli);
         placeImage = (ImageView) findViewById(R.id.place_image);
         review = (ListView) findViewById(R.id.body);
+        savePlace = (FloatingActionButton)findViewById(R.id.fab_place);
 
         if (client == null) {
             client = new GoogleApiClient.Builder(this)
@@ -124,7 +134,7 @@ public class PlaceDetail extends AppCompatActivity implements
     }
 
 
-    public void getPlace(LatLng loc){
+    public void getPlace(final LatLng loc){
 
         String url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?location="
                 +loc.latitude+","+loc.longitude
@@ -141,14 +151,15 @@ public class PlaceDetail extends AppCompatActivity implements
                             JSONArray arr = aux.getJSONArray("results");
                             JSONObject o = arr.getJSONObject(0);
 
-                            String id = (String)o.get("place_id");
+                            final String id = (String)o.get("place_id");
 
+                            Log.i("response",response);
                             Places.GeoDataApi.getPlaceById(client, id).setResultCallback(new ResultCallback<PlaceBuffer>() {
                                 @Override
                                 public void onResult(PlaceBuffer places) {
                                     if (places.getStatus().isSuccess() && places.getCount() > 0) {
                                         final Place myPlace = places.get(0);
-
+                                        name = (String)myPlace.getName();
                                         textView.setText(myPlace.getName()+"\n"+myPlace.getAddress());
 
                                     } else {
@@ -158,7 +169,6 @@ public class PlaceDetail extends AppCompatActivity implements
                                     places.release();
                                 }
                             });
-
 
 
                             Places.GeoDataApi.getPlacePhotos(client, id).setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
@@ -190,6 +200,28 @@ public class PlaceDetail extends AppCompatActivity implements
                                 }
                             });
 
+
+                            savePlace.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataBaseHelper dataBaseHelper = new DataBaseHelper(getBaseContext());
+                                    SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+
+                                    ContentValues values = new ContentValues();
+                                    values.put(DataBaseModel.Preference.COLUMN_NAME_PLACE_NAME, name);
+                                    values.put(DataBaseModel.Preference.COLUMN_NAME_PLACE_POSITION,loc.latitude+","+loc.longitude);
+
+                                    db.insert(
+                                            DataBaseModel.Preference.TABLE_NAME,
+                                            null,
+                                            values
+                                    );
+
+                                    Snackbar.make(v, "Luogo Salvato", Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
+
+                                }
+                            });
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -266,22 +298,6 @@ public class PlaceDetail extends AppCompatActivity implements
                                 }else{
                              //       review.setText("Nessuna recensione");
                                 }
-                                /*
-                                //Log.d("reviews",response);
-                                // Log.i("reviews",responseWrapper.toString());
-                                JSONObject g = (JSONObject) responseWrapper.get("reviews");
-                                JSONArray reviewWrapper = responseWrapper.getJSONArray("reviews");
-
-                                if(reviewWrapper.length() > 0){
-
-                                    review.setText(reviewWrapper.toString());
-
-                                }else{
-                                    review.setText("Non ci sono commenti");
-                                }
-
-                                Log.d("reviews",g.toString());
-*/
 
 
                         }
