@@ -15,9 +15,11 @@ public class MainMenu extends AppCompatActivity {
 
         ImageButton buttonMap = (ImageButton) findViewById(R.id.mapButton);
         ImageButton buttonPreference = (ImageButton) findViewById(R.id.preferenceButton);
+        ImageButton buttonSearch = (ImageButton) findViewById(R.id.searchButton);
 
         buttonMap.setOnClickListener(startMap());
         buttonPreference.setOnClickListener(startPreference());
+        buttonSearch.setOnClickListener(startSearch());
     }
 
     private View.OnClickListener startMap() {
@@ -38,6 +40,17 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainMenu.this,PreferencesActivity.class);
+
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener startSearch(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this,SearchActivity.class);
 
                 startActivity(intent);
             }

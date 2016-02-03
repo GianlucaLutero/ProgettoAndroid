@@ -106,20 +106,20 @@ public class PlaceRequest{
 
             LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
            // mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 15.0f)));
 
 
         }
     }
 
-    public static void getMonument(final Location loc,final GoogleApiClient cli,final GoogleMap mMap,final Context context){
+    public static void getStadium(final Location loc,final GoogleApiClient cli,final GoogleMap mMap,final Context context){
         if(loc != null){
 
             RequestQueue queue = Volley.newRequestQueue(context);
 
             String url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?location="
                     +loc.getLatitude()+","+loc.getLongitude()
-                    +"&radius=5000&types=|&key=AIzaSyAtcUr-ci8vqcyogU-tebHMcyZmAZ00_i0";
+                    +"&radius=5000&types=stadium&key=AIzaSyAtcUr-ci8vqcyogU-tebHMcyZmAZ00_i0";
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
@@ -155,7 +155,8 @@ public class PlaceRequest{
                                                         mMap.addMarker(new MarkerOptions()
                                                                 .position(new LatLng(lat, lng))
                                                                 .title((String) myPlace.getName())
-                                                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                                                .icon(BitmapDescriptorFactory
+                                                                        .fromResource(R.drawable.marker_stadio)));
 
                                                     }
                                                 }
@@ -188,7 +189,7 @@ public class PlaceRequest{
 
             LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
         //    mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 15.0f)));
 
         }
     }
@@ -259,7 +260,7 @@ public class PlaceRequest{
 
            LatLng position = new LatLng(loc.getLatitude(),loc.getLongitude());
            // mMap.addMarker(new MarkerOptions().position(position).title("Tua posizione").draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 12.0f)));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(position, 15.0f)));
 
 
         }

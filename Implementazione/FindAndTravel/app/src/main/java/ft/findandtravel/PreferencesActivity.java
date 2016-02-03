@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,7 +16,6 @@ import android.widget.ListView;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ft.findandtravel.modello.DataBaseModel;
 import ft.findandtravel.modello.PlacePreference;
@@ -53,7 +50,8 @@ public class PreferencesActivity extends AppCompatActivity {
         */
         String projection[]={
                 DataBaseModel.Preference.COLUMN_NAME_PLACE_NAME,
-                DataBaseModel.Preference.COLUMN_NAME_PLACE_POSITION
+                DataBaseModel.Preference.COLUMN_NAME_PLACE_POSITION,
+                DataBaseModel.Preference.COLUMN_NAME_PLACE_TYPE
         };
 
         Cursor c = db.query(
@@ -68,30 +66,40 @@ public class PreferencesActivity extends AppCompatActivity {
 
         list = new ArrayList<>();
 
-        c.moveToFirst();
+        if(c.getCount() > 0) {
+            c.moveToFirst();
 
-        while(c.moveToNext()){
-            PlacePreference tmp = new PlacePreference();
+            do {
+                PlacePreference tmp = new PlacePreference();
 
-            String name = c.getString(
-                    c.getColumnIndexOrThrow(DataBaseModel.Preference.COLUMN_NAME_PLACE_NAME)
-            );
+                String name = c.getString(
+                        c.getColumnIndexOrThrow(DataBaseModel.Preference.COLUMN_NAME_PLACE_NAME)
+                );
 
-            String position = c.getString(
-                    c.getColumnIndexOrThrow(DataBaseModel.Preference.COLUMN_NAME_PLACE_POSITION)
-            );
+                Log.i("Nome", name);
+                String position = c.getString(
+                        c.getColumnIndexOrThrow(DataBaseModel.Preference.COLUMN_NAME_PLACE_POSITION)
+                );
 
-            String latLng[] = position.split(",");
+                String tipo = c.getString(
+                        c.getColumnIndexOrThrow(DataBaseModel.Preference.COLUMN_NAME_PLACE_TYPE)
+                );
+
+                String latLng[] = position.split(",");
 
 
-            LatLng pos = new LatLng(Float.parseFloat(latLng[0]),Float.parseFloat(latLng[1]));
+                LatLng pos = new LatLng(Float.parseFloat(latLng[0]), Float.parseFloat(latLng[1]));
 
-            tmp.setName(name);
-            tmp.setLocation(pos);
+                tmp.setName(name);
+                tmp.setLocation(pos);
+                tmp.setType(tipo);
 
-            list.add(tmp);
+                list.add(tmp);
+            } while (c.moveToNext());
+
+        }else{
+            buildAlertMessageVoid();
         }
-
         adapter = new PlacePreferenceAdapter(getBaseContext(),android.R.layout.simple_list_item_1,list);
         l.setAdapter(adapter);
 
@@ -144,6 +152,14 @@ public class PreferencesActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void buildAlertMessageVoid(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Nessun luogo preferito salvato")
+                .setCancelable(true);
         final AlertDialog alert = builder.create();
         alert.show();
     }

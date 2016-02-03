@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class PlacePreference {
 
     String name;
+    String type;
     LatLng location;
 
     public PlacePreference(){}
@@ -28,5 +29,13 @@ public class PlacePreference {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

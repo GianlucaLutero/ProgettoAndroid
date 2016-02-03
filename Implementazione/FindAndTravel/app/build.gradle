@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
@@ -22,9 +21,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':volley')
+   // compile project(':volley')
     testCompile 'junit:junit:4.12'
+    compile 'com.mcxiaoke.volley:library:1.0.17'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:design:23.1.1'
 }
+
+apply plugin: 'com.google.gms.google-services'

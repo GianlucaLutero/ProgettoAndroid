@@ -8,12 +8,13 @@ import android.provider.BaseColumns;
 public class DataBaseModel {
 
     private static final String TEXT_TYPE = " TEXT";
-    private static final String COMMA_SEP = ",";
+    private static final String COMMA_SEP = " ,";
 
     public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + Preference.TABLE_NAME + " ("+
                     Preference.COLUMN_NAME_PLACE_NAME + TEXT_TYPE +" PRIMARY KEY,"+
-                    Preference.COLUMN_NAME_PLACE_POSITION + TEXT_TYPE+
+                    Preference.COLUMN_NAME_PLACE_POSITION + TEXT_TYPE +COMMA_SEP+
+                    Preference.COLUMN_NAME_PLACE_TYPE + TEXT_TYPE +
                     ")";
 
     public static final String SQL_DELETE_ENTRIES =
@@ -25,6 +26,7 @@ public class DataBaseModel {
         public static final String TABLE_NAME = "preferiti";
         public static final String COLUMN_NAME_PLACE_NAME = "place_name";
         public static final String COLUMN_NAME_PLACE_POSITION = "place_position";
+        public static final String COLUMN_NAME_PLACE_TYPE = "place_type";
 
     }
 }

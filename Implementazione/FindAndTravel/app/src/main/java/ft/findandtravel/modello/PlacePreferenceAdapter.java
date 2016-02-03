@@ -29,8 +29,22 @@ public class PlacePreferenceAdapter extends ArrayAdapter<PlacePreference>{
         PlacePreference p = getItem(position);
 
         name.setText(p.getName());
+       // Log.i("Nome città",p.getName());
 
-        logo.setImageResource(R.drawable.place_icon);
+        switch (p.getType()){
+            case "museum":
+                logo.setImageResource(R.drawable.museum_icon);
+                break;
+            case "stadium":
+                logo.setImageResource(R.drawable.stadium_icon);
+                break;
+            case "place_of_worship":
+                logo.setImageResource(R.drawable.place_of_worship_icon);
+                break;
+            default:
+                logo.setImageResource(R.drawable.interest_icon);
+        }
+
         return convertView;
     }
 }

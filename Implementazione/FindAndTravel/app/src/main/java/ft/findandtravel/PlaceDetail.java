@@ -1,32 +1,23 @@
 package ft.findandtravel;
 
-import android.app.DownloadManager;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.JsonReader;
-import android.util.JsonToken;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,26 +26,20 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlaceFilter;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.PlacePhotoResult;
 import com.google.android.gms.location.places.Places;
 
-import com.google.android.gms.location.places.internal.PlacesParams;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
-import org.json.JSONTokener;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import ft.findandtravel.modello.DataBaseModel;
 import ft.findandtravel.modello.Reviewer;
@@ -68,11 +53,13 @@ public class PlaceDetail extends AppCompatActivity implements
     private GoogleApiClient client;
     private LatLng position;
     private String name;
+    private String type;
     private RequestQueue queue;
     private TextView textView;
     private ListView review;
     private ImageView placeImage;
     private FloatingActionButton savePlace;
+    private FloatingActionButton openMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +73,7 @@ public class PlaceDetail extends AppCompatActivity implements
         placeImage = (ImageView) findViewById(R.id.place_image);
         review = (ListView) findViewById(R.id.body);
         savePlace = (FloatingActionButton)findViewById(R.id.fab_place);
+        openMap = (FloatingActionButton)findViewById(R.id.open_map);
 
         if (client == null) {
             client = new GoogleApiClient.Builder(this)
@@ -100,6 +88,14 @@ public class PlaceDetail extends AppCompatActivity implements
 
        getPlace(position);
        getPlaceReview(position);
+
+       openMap.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("geo:"+position.latitude+","+position.longitude+"?z=20"));
+               startActivity(intent);
+           }
+       });
 
 
     }
@@ -160,6 +156,36 @@ public class PlaceDetail extends AppCompatActivity implements
                                     if (places.getStatus().isSuccess() && places.getCount() > 0) {
                                         final Place myPlace = places.get(0);
                                         name = (String)myPlace.getName();
+                                        List place_type = myPlace.getPlaceTypes();
+
+                                        boolean found = false;
+
+                                        for(int k = 0;k<place_type.size();++k) {
+                                            switch ((int) place_type.get(k)) {
+                                                case Place.TYPE_MUSEUM:
+                                                    type = "museum";
+                                                    Log.i("Museo",name);
+                                                    found = true;
+                                                    break;
+                                                case Place.TYPE_STADIUM:
+                                                    type = "stadium";
+                                                    Log.i("Stadio",name);
+                                                    found = true;
+                                                    break;
+                                                case Place.TYPE_PLACE_OF_WORSHIP:
+                                                    type = "place_of_worship";
+                                                    Log.i("Chiesa",name);
+                                                    found = true;
+                                                    break;
+                                                default:
+                                                    type = "no_type";
+                                            }
+
+                                            if (found){
+                                                break;
+                                            }
+                                        }
+
                                         textView.setText(myPlace.getName()+"\n"+myPlace.getAddress());
 
                                     } else {
@@ -210,6 +236,11 @@ public class PlaceDetail extends AppCompatActivity implements
                                     ContentValues values = new ContentValues();
                                     values.put(DataBaseModel.Preference.COLUMN_NAME_PLACE_NAME, name);
                                     values.put(DataBaseModel.Preference.COLUMN_NAME_PLACE_POSITION,loc.latitude+","+loc.longitude);
+                                    values.put(DataBaseModel.Preference.COLUMN_NAME_PLACE_TYPE, type);
+
+                                    Log.i("Nome",name);
+                                    Log.i("Position",loc.latitude+","+loc.longitude);
+                                    Log.i("Type",type);
 
                                     db.insert(
                                             DataBaseModel.Preference.TABLE_NAME,
