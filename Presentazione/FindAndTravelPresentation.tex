@@ -1,0 +1,178 @@
+\documentclass[10pt,a4paper]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{wrapfig}
+
+\usetheme{Copenhagen}
+
+\title{FindAndTravel}
+\author{Gianluca Lutero \and Klajdi Kola}
+\institute{Universita' degli studi di Parma}
+\date{}
+
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}{Indice}
+\begin{figure}
+
+\begin{minipage}{0.47\textwidth}
+   \begin{itemize}
+      \item Obiettivi dell'applicazione
+      \item Componenti Android utilizzate
+      \item Funzionalita' dell'applicazione
+      \item Sviluppi futuri
+   \end{itemize}
+\end{minipage}
+\hfill 
+\begin{minipage}{0.35\textwidth}
+
+   \includegraphics[scale=1]{logo2.png}
+
+\end{minipage}
+
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Obiettivi dell'applicazione} 
+    \begin{block}{Obiettivo}
+    
+    L'applicazione FindAndTravel si pone come obiettivo quello di fornire informazioni turistiche per punti di interesse dell'utente. 
+    \end{block}      
+Cosa puo' fare l'utente: 
+   \begin{itemize}
+    \item Cercare i punti di interesse di una localita'
+    \item Ottenere informazioni per quei luoghi, in particolare:
+    \begin{itemize}
+         \item Nome del luogo
+         \item Posizione
+         \item Tipo
+         \item Feedback degli utenti
+    \end{itemize}        
+    \item Lasciare un feedback   
+   \end{itemize}    
+\end{frame}
+
+\begin{frame}{Componenti Android utilizzate}
+\begin{figure}
+
+\begin{minipage}{0.47\textwidth}
+   \begin{itemize}
+      \item Google Map
+      \item Google Places per Android e Web
+      \item SQLite
+      \item Volley
+      \item Location service
+   \end{itemize}
+\end{minipage}
+\hfill 
+\begin{minipage}{0.35\textwidth}
+
+   \includegraphics[scale=0.1]{Android_robot.png}
+
+\end{minipage}
+
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Funzionalita' di FindAndTravel}
+\framesubtitle{Ciclo di vita di FindAndTravel}
+  \begin{figure}
+   \centering
+   \includegraphics[scale=0.2]{CicloDiVitaApp.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Funzionalita' di FindAndTravel}
+\framesubtitle{Menu' principale}
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+ \begin{block}{Menu'}
+ 
+ Dal menu principale l'utente ha la possibilita' di accedere alle varie sezioni dell'app attraverso i corrispondenti \texttt{ImageButton}.    
+ \end{block}
+\end{minipage}
+\hfill
+\begin{minipage}{0.35\textwidth}
+  \includegraphics[scale=0.1]{menu.png}
+\end{minipage}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Funzionalita' di FindAndTravel}
+\framesubtitle{Mappa}
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+ \begin{block}{Mappa}
+  Sulla mappa sono evidenziati i punti d'interesse attraverso i marker cliccabili.
+ \end{block}
+\end{minipage}
+\hfill
+\begin{minipage}{0.35\textwidth}
+  \includegraphics[scale=0.1]{mappa2.png}
+\end{minipage}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Funzionalita' di FindAndTravel}
+\framesubtitle{Dettagli punto d'interesse}
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+ \begin{block}{Dettagli}
+  Sono visualizzate le informazioni relative al punto d'interesse. Attraverso il bottone in alto è possibile salvare tra i preferiti il luogo mentre con quello in basso si accede a \textbf{Google Maps} sulla posizione indicata con la possibilità di vedere piu' commenti degli utenti e lasciarne uno proprio. 
+ \end{block}
+\end{minipage}
+\hfill
+\begin{minipage}{0.35\textwidth}
+  \includegraphics[scale=0.1]{dettagli.png}
+\end{minipage}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Funzionalita' di FindAndTravel}
+\framesubtitle{Preferiti}
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+ \begin{block}{Preferiti}
+ Sono salvate tutte le posizioni preferite dell'utente visualizzate attraverso una lista. Toccando una riga della lista si accede alla sezione dettagli relativa.
+ \end{block}
+\end{minipage}
+\hfill
+\begin{minipage}{0.35\textwidth}
+  \includegraphics[scale=0.1]{preferiti.png}
+\end{minipage}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Funzionalita' di FindAndTravel}
+\framesubtitle{Ricerca}
+\begin{figure}
+\begin{minipage}{0.45\textwidth}
+ \begin{block}{Ricerca}
+ In questa sezione è possibile ricercare i luoghi che non vengono visualizzati attraverso la mappa. Una volta selezionato il risultato desiderato si verrà riportati nella relativa sezione dettagli.
+ \end{block}
+\end{minipage}
+\hfill
+\begin{minipage}{0.35\textwidth}
+  \includegraphics[scale=0.1]{ricerca.png}
+\end{minipage}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Sviluppi futuri}
+\begin{itemize}
+\item Porting iOS
+\item Maggiore integrazione con i servizi di Google
+\item Miglioramento dell'interfaccia grafica
+\end{itemize}
+\end{frame}
+
+\end{document}
